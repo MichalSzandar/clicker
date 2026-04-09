@@ -1,12 +1,7 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <RecordPlayerHandler.hpp>
-
-#define CLICKER_PIN 12
-#define MOVER_PIN 13
-
-const char* ssid = "REPLACE_WITH_YOUR_SSID";
-const char* password = "REPLACE_WITH_YOUR_PASSWORD";
+#include <Secrets.hpp>
 
 HTTPHandler httpHandler;
 WiFiServer server(80);
@@ -16,7 +11,14 @@ RecordPlayerHandler recordPlayerHandler(clicker);
 const long timeoutTime = 2000;
 
 void initWiFi() {
-  WiFi.begin(ssid, password);
+  WiFi.mode(WIFI_STA);
+  WiFi.disconnect();
+  delay(100);
+
+  Serial.print("Connecting to WiFi: ");
+  Serial.println(WIFI_SSID);
+  
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
@@ -27,7 +29,7 @@ void initWiFi() {
 }
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   
   clicker.setupPins(CLICKER_PIN, MOVER_PIN);
   recordPlayerHandler.setupRecordPlayerRoutes(httpHandler);

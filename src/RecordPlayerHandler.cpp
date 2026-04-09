@@ -1,25 +1,23 @@
 #include "RecordPlayerHandler.hpp"
 
 void RecordPlayerHandler::setupRecordPlayerRoutes(HTTPHandler &httpHandler) {
+    httpHandler.on("GET", "/", [this](WiFiClient& c) { this->handleRoot(c); });
     httpHandler.on("GET", "/play", [this](WiFiClient& c) { this->handlePlay(c); });
     httpHandler.on("GET", "/pause", [this](WiFiClient& c) { this->handlePause(c); });
     httpHandler.on("GET", "/stop", [this](WiFiClient& c) { this->handleStop(c); });
 }
 
 void RecordPlayerHandler::handlePlay(WiFiClient &client) {
-    send200Response(client);
     clicker.clickPlay();
     handleRoot(client);
 }
 
 void RecordPlayerHandler::handlePause(WiFiClient &client) {
-    send200Response(client);
     clicker.clickPause();
     handleRoot(client);
 }
 
 void RecordPlayerHandler::handleStop(WiFiClient &client) {
-    send200Response(client);
     clicker.clickStop();
     handleRoot(client);
 }
